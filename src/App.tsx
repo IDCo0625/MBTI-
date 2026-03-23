@@ -595,6 +595,13 @@ export default function App() {
         </AnimatePresence>
       </div>
 
+      {/* Copyright Notice */}
+      <div className="fixed bottom-6 right-6 z-50 pointer-events-none">
+        <p className="font-display text-[15px] text-mars-gold tracking-widest uppercase opacity-60 text-right">
+          Copyright : Future Canvas & IDCo All Rights Reserved
+        </p>
+      </div>
+
       <style>{`
         .custom-scrollbar::-webkit-scrollbar {
           width: 4px;
