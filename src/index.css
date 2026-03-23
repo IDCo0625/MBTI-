@@ -1,0 +1,99 @@
+@import "tailwindcss";
+@import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Space+Grotesk:wght@300;400;500;700&display=swap');
+
+@theme {
+  --font-display: "Orbitron", sans-serif;
+  --font-sans: "Space Grotesk", sans-serif;
+  
+  --color-mars-red: #FF4D00;
+  --color-mars-gold: #FFB800;
+  --color-mars-dark: #05070A;
+  --color-mars-surface: #1A1D23;
+}
+
+@layer base {
+  body {
+    @apply bg-mars-dark text-white overflow-x-hidden;
+    background-image: 
+      radial-gradient(circle at 50% 50%, rgba(255, 77, 0, 0.05) 0%, transparent 50%),
+      radial-gradient(circle at 20% 30%, rgba(255, 184, 0, 0.03) 0%, transparent 40%);
+  }
+}
+
+.hud-border {
+  position: relative;
+  border: 1px solid rgba(255, 184, 0, 0.2);
+}
+
+.hud-border::before,
+.hud-border::after,
+.hud-corner-bl::before,
+.hud-corner-bl::after {
+  content: '';
+  position: absolute;
+  width: 20px;
+  height: 20px;
+  border-color: var(--color-mars-gold);
+  border-style: solid;
+  pointer-events: none;
+}
+
+/* Top Left */
+.hud-border::before {
+  top: -2px;
+  left: -2px;
+  border-width: 3px 0 0 3px;
+}
+
+/* Top Right */
+.hud-border::after {
+  top: -2px;
+  right: -2px;
+  border-width: 3px 3px 0 0;
+}
+
+/* Bottom Left and Right handled by a wrapper or specific classes if needed */
+.hud-corners-bottom::before {
+  content: '';
+  position: absolute;
+  bottom: -2px;
+  left: -2px;
+  width: 20px;
+  height: 20px;
+  border-color: var(--color-mars-gold);
+  border-style: solid;
+  border-width: 0 0 3px 3px;
+  pointer-events: none;
+}
+
+.hud-corners-bottom::after {
+  content: '';
+  position: absolute;
+  bottom: -2px;
+  right: -2px;
+  width: 20px;
+  height: 20px;
+  border-color: var(--color-mars-gold);
+  border-style: solid;
+  border-width: 0 3px 3px 0;
+  pointer-events: none;
+}
+
+.star-field {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: -1;
+  background: url('https://www.transparenttextures.com/patterns/stardust.png');
+  opacity: 0.3;
+}
+
+.mars-glow {
+  box-shadow: 0 0 30px rgba(255, 184, 0, 0.15);
+}
+
+.text-glow {
+  text-shadow: 0 0 10px rgba(255, 184, 0, 0.5);
+}
