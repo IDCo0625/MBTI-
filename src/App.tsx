@@ -366,6 +366,13 @@ export default function App() {
                   </div>
                 ))}
               </div>
+
+              {/* Copyright Notice - Embedded in Intro Background */}
+              <div className="absolute bottom-0 right-0 md:-bottom-10 md:-right-10 opacity-40 pointer-events-none">
+                <p className="font-display text-[15px] text-mars-gold tracking-widest uppercase text-right">
+                  Copyright : Future Canvas & IDCo All Rights Reserved
+                </p>
+              </div>
             </motion.div>
           )}
 
@@ -593,13 +600,6 @@ export default function App() {
             </motion.div>
           )}
         </AnimatePresence>
-      </div>
-
-      {/* Copyright Notice */}
-      <div className="fixed bottom-6 right-6 z-50 pointer-events-none">
-        <p className="font-display text-[15px] text-mars-gold tracking-widest uppercase opacity-60 text-right">
-          Copyright : Future Canvas & IDCo All Rights Reserved
-        </p>
       </div>
 
       <style>{`
