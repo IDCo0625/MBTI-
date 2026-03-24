@@ -17,6 +17,8 @@ import {
   Rocket,
   CheckCircle2
 } from 'lucide-react';
+import { GoogleGenAI } from "@google/genai";
+import Markdown from 'react-markdown';
 
 // --- Types ---
 type Dimension = 'E' | 'I' | 'S' | 'N' | 'T' | 'F' | 'J' | 'P';
@@ -207,9 +209,6 @@ const HudContainer = ({ children, className = "" }: { children: React.ReactNode,
   </div>
 );
 
-import { GoogleGenAI } from "@google/genai";
-import Markdown from 'react-markdown';
-
 export default function App() {
   const [step, setStep] = useState<'intro' | 'quiz' | 'loading' | 'result'>('intro');
   const [currentIdx, setCurrentIdx] = useState(0);
@@ -270,18 +269,36 @@ export default function App() {
     if (!mbti || isAiLoading) return;
     setIsAiLoading(true);
     try {
-      const ai = new GoogleGenAI({ apiKey: process.env.GEMINI_API_KEY });
+      const apiKey = process.env.GEMINI_API_KEY;
+      if (!apiKey) {
+        throw new Error("API_KEY_MISSING");
+      }
+      
+      const ai = new GoogleGenAI({ apiKey });
       const response = await ai.models.generateContent({
         model: "gemini-3-flash-preview",
-        contents: `당신은 화성 테라포밍 프로젝트의 수석 창업 컨설턴트입니다. 사용자의 MBTI 유형은 ${mbti}이며, 기본 추천 아이템은 ${items.join(", ")}입니다. 
-        이 유형의 강점을 분석하고, 화성이라는 특수한 환경에서 추천 아이템 중 하나를 골라 아주 구체적인 차별화 전략을 제안하거나, 
-        화성 개척 시대에 어울리는 또 다른 이색적인 창업 아이템 2가지를 더 제안해주세요. 
-        답변은 미래 지향적이고 전문적인 어조로 한국어로 작성해주시고, 마크다운 형식을 사용해 가독성 있게 구성해주세요.`,
+        contents: [{
+          parts: [{
+            text: `당신은 화성 테라포밍 프로젝트의 수석 창업 컨설턴트입니다. 사용자의 MBTI 유형은 ${mbti}이며, 기본 추천 아이템은 ${items.join(", ")}입니다. 
+            이 유형의 강점을 분석하고, 화성이라는 특수한 환경에서 추천 아이템 중 하나를 골라 아주 구체적인 차별화 전략을 제안하거나, 
+            화성 개척 시대에 어울리는 또 다른 이색적인 창업 아이템 2가지를 더 제안해주세요. 
+            답변은 미래 지향적이고 전문적인 어조로 한국어로 작성해주시고, 마크다운 형식을 사용해 가독성 있게 구성해주세요.`
+          }]
+        }],
       });
-      setAiRecommendation(response.text || "데이터 수신에 실패했습니다.");
+      
+      if (!response || !response.text) {
+        throw new Error("EMPTY_RESPONSE");
+      }
+      
+      setAiRecommendation(response.text);
     } catch (error) {
       console.error("AI Error:", error);
-      setAiRecommendation("통신 장애가 발생했습니다. 기지국 연결을 확인해주세요.");
+      if (error instanceof Error && error.message === "API_KEY_MISSING") {
+        setAiRecommendation("API 키가 설정되지 않았습니다. 관리자에게 문의하세요.");
+      } else {
+        setAiRecommendation("통신 장애가 발생했습니다. 기지국 연결을 확인해주세요.");
+      }
     } finally {
       setIsAiLoading(false);
     }
